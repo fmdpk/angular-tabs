@@ -1,0 +1,7 @@
+{
+    "/fonts.gstatic.com": {
+        "target": "https://fonts.gstatic.com",
+        "changeOrigin": true,
+        "secure": false
+    }
+}
