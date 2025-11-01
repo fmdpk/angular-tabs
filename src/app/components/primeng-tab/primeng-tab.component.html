@@ -1,24 +1,52 @@
 <div class="card">
-    <mat-form-field>
-        <mat-label>Selected tab index</mat-label>
-        <input matInput type="number" [min]="0" [max]="tabs.length - 1" [formControl]="selected">
-    </mat-form-field>
+  <mat-form-field>
+    <mat-label>Selected tab index</mat-label>
+    <input
+      matInput
+      type="number"
+      [min]="0"
+      [max]="tabs.length - 1"
+      [formControl]="selected"
+    />
+  </mat-form-field>
 
-    <div class="p-4">
-        <button mat-raised-button class="example-add-tab-button" (click)="addTab(selectAfterAdding.checked)">
-            Add new tab
-        </button>
-        <mat-checkbox #selectAfterAdding> Select tab after adding </mat-checkbox>
-    </div>
+  <div class="p-4">
+    <button
+      mat-raised-button
+      class="example-add-tab-button"
+      (click)="addTab(selectAfterAdding.checked)"
+    >
+      Add new tab
+    </button>
+    <mat-checkbox #selectAfterAdding> Select tab after adding</mat-checkbox>
+  </div>
+  <div
+    cdkDropList
+    (cdkDropListDropped)="drop($event)"
+    class="tab-list"
+    cdkDropListOrientation="horizontal"
+  >
     <p-tabs [(value)]="selected.value!" (valueChange)="onTabChange($event)">
-        <p-tablist>
-            @for(tab of tabs; track tab.id; let i = $index){
-            <p-tab [value]="i">
-                <i [class]="tab.icon" (click)="removeTab(i);$event.stopPropagation()"></i>
-                <span>{{ tab.label }}</span>
-            </p-tab>
-            }
-        </p-tablist>
+      <p-tablist>
+        @for (tab of tabs; track tab.id; let i = $index) {
+          <p-tab [value]="i" cdkDrag (cdkDragStarted)="dragStarted($event)">
+            <span>{{ tab.label }}</span>
+            <i
+              [class]="tab.icon"
+              (click)="removeTab(i); $event.stopPropagation()"
+            ></i>
+            <!--<router-outlet></router-outlet>-->
+          </p-tab>
+        }
+      </p-tablist>
+      <p-tabpanels>
+        @for (tab of tabs; track tab.id) {
+          <p-tabpanel [value]="tab.id">
+            <app-dynamic-tab-content [data]="data + ' ' + tab.label"></app-dynamic-tab-content>
+          </p-tabpanel>
+        }
+      </p-tabpanels>
+
     </p-tabs>
-    <!--<router-outlet></router-outlet>-->
+  </div>
 </div>
