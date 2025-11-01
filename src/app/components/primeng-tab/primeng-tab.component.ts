@@ -33,7 +33,7 @@ interface TabLabelInterface {
   templateUrl: './primeng-tab.component.html',
   styleUrl: './primeng-tab.component.scss',
 })
-export class PrimengTabComponent implements OnInit{
+export class PrimengTabComponent implements OnInit {
   @Input() data!: string;
   tabs: TabLabelInterface[] = [
     {
@@ -69,6 +69,7 @@ export class PrimengTabComponent implements OnInit{
   ];
 
   selected = new FormControl(0);
+  selectedDragItem = new FormControl(-1);
 
   ngOnInit() {
     console.log(this.data)
@@ -91,10 +92,7 @@ export class PrimengTabComponent implements OnInit{
     if (this.selected.getRawValue() === index) {
       this.selected.setValue(index - 1);
     }
-    this.tabs.forEach((item: TabLabelInterface, index: number) => {
-      item.id = index;
-      item.label = 'tab ' + index;
-    });
+    this.reorderTabs()
   }
 
   onTabChange(tabIndex: number | string) {
@@ -106,14 +104,41 @@ export class PrimengTabComponent implements OnInit{
     console.log(event)
     if (event.previousIndex === event.currentIndex) return;
     moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
-    this.selected.setValue(+event.currentIndex);
+    this.setActiveTab(event)
+    this.reorderTabs()
+  }
+
+  setActiveTab(event: CdkDragDrop<TabLabelInterface[]>) {
+    let selectedTabIndex = +this.selected.getRawValue()!
+    if (this.selectedDragItem.getRawValue() === this.selected.getRawValue()) {
+      this.selected.setValue(+event.currentIndex);
+      return;
+    } else if (
+      event.previousIndex < +this.selected.getRawValue()! &&
+      event.currentIndex >= +this.selected.getRawValue()!
+    ) {
+      this.selected.setValue(selectedTabIndex - 1)
+      return;
+    } else if (
+      event.previousIndex > +this.selected.getRawValue()! &&
+      event.currentIndex <= +this.selected.getRawValue()!
+    ) {
+      this.selected.setValue(selectedTabIndex + 1)
+      return;
+    } else {
+      return
+    }
+  }
+
+  reorderTabs(){
     this.tabs.forEach((item: TabLabelInterface, index: number) => {
       item.id = index;
       item.label = 'tab ' + index;
     });
   }
 
-  dragStarted(event: CdkDragStart<any>){
+  dragStarted(event: CdkDragStart<any>, index: number) {
+    this.selectedDragItem.setValue(index)
     console.log(event)
   }
 }

@@ -29,7 +29,7 @@
     <p-tabs [(value)]="selected.value!" (valueChange)="onTabChange($event)">
       <p-tablist>
         @for (tab of tabs; track tab.id; let i = $index) {
-          <p-tab [value]="i" cdkDrag (cdkDragStarted)="dragStarted($event)">
+          <p-tab [value]="i" cdkDrag (cdkDragStarted)="dragStarted($event, i)">
             <span>{{ tab.label }}</span>
             <i
               [class]="tab.icon"
