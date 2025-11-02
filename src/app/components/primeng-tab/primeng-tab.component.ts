@@ -87,12 +87,18 @@ export class PrimengTabComponent implements OnInit {
     }
   }
 
-  removeTab(index: number) {
-    this.tabs.splice(index, 1);
-    if (this.selected.getRawValue() === index) {
-      this.selected.setValue(index - 1);
+  removeTab(event: MouseEvent, index: number) {
+    console.log(index)
+    if(index % 2 === 0){
+      event.preventDefault()
+      return;
+    } else {
+      this.tabs.splice(index, 1);
+      if (this.selected.getRawValue() === index) {
+        this.selected.setValue(index - 1);
+      }
+      this.reorderTabs()
     }
-    this.reorderTabs()
   }
 
   onTabChange(tabIndex: number | string) {

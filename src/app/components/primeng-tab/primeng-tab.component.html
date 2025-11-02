@@ -33,7 +33,7 @@
             <span>{{ tab.label }}</span>
             <i
               [class]="tab.icon"
-              (click)="removeTab(i); $event.stopPropagation()"
+              (click)="removeTab($event, i); $event.stopPropagation()"
             ></i>
             <!--<router-outlet></router-outlet>-->
           </p-tab>
